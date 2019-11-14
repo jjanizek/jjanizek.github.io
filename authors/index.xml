@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Authors | Joseph D. Janizek</title>
+    <link>/authors/</link>
+      <atom:link href="/authors/index.xml" rel="self" type="application/rss+xml" />
+    <description>Authors</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 13 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>Authors</title>
+      <link>/authors/</link>
+    </image>
+    
+    <item>
+      <title></title>
+      <link>/authors/admin/</link>
+      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
+      <guid>/authors/admin/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;m an MD/PhD student at the University of Washington&amp;rsquo;s MSTP. I&amp;rsquo;m currently in the PhD phase of my training at the Allen School of Computer Science and Engineering, where I&amp;rsquo;m being advised by Su-In Lee. My research focuses on studying robust and explainable machine learning to build tools that can improve doctors&amp;rsquo; ability to provide quality healthcare, with applications ranging from precision oncology to radiology.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
