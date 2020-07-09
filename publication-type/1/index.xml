@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>1 | Joseph D. Janizek</title>
+    <link>/publication-type/1/</link>
+      <atom:link href="/publication-type/1/index.xml" rel="self" type="application/rss+xml" />
+    <description>1</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Thu, 02 Apr 2020 14:39:32 -0400</lastBuildDate>
+    <image>
+      <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <title>1</title>
+      <link>/publication-type/1/</link>
+    </image>
+    
+    <item>
+      <title>An adversarial approach for the robust classification of pneumonia from chest radiographs</title>
+      <link>/publication/cxr_adv/</link>
+      <pubDate>Thu, 02 Apr 2020 14:39:32 -0400</pubDate>
+      <guid>/publication/cxr_adv/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

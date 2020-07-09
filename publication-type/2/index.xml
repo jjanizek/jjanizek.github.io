@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>2 | Joseph D. Janizek</title>
+    <link>/publication-type/2/</link>
+      <atom:link href="/publication-type/2/index.xml" rel="self" type="application/rss+xml" />
+    <description>2</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 05 Sep 2020 14:40:02 -0400</lastBuildDate>
+    <image>
+      <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <title>2</title>
+      <link>/publication-type/2/</link>
+    </image>
+    
+    <item>
+      <title>Adversarial Deconfounding Autoencoder for Learning Robust Gene Expression Embeddings</title>
+      <link>/publication/adae/</link>
+      <pubDate>Sat, 05 Sep 2020 14:40:02 -0400</pubDate>
+      <guid>/publication/adae/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Accurate classification of BRCA1 variants with saturation genome editing</title>
+      <link>/publication/brca_sge/</link>
+      <pubDate>Mon, 01 Oct 2018 14:40:54 -0400</pubDate>
+      <guid>/publication/brca_sge/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Characterization of the Lipase Stimulating Domain for Apolipoprotein AV and the Development of a Therapeutic Peptide for the Treatment of Hypertriglyceridemia</title>
+      <link>/publication/lipase2/</link>
+      <pubDate>Fri, 01 May 2015 14:41:16 -0400</pubDate>
+      <guid>/publication/lipase2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>A Novel Fluorescence-Based Assay is Used to Investigate the Triglyceride Hydrolytic Activity of Lipases and to Identify Synthetic Peptides With Strong Lipase-Stimulating Activities</title>
+      <link>/publication/lipase1/</link>
+      <pubDate>Thu, 01 May 2014 14:41:18 -0400</pubDate>
+      <guid>/publication/lipase1/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
