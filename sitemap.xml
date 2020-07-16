@@ -53,6 +53,16 @@
   </url>
   
   <url>
+    <loc>/post/integrated_hessians/</loc>
+    <lastmod>2020-07-11T19:25:15-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/</loc>
+    <lastmod>2020-07-11T19:25:15-04:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/project/path_explain/</loc>
     <lastmod>2020-07-09T14:02:38-04:00</lastmod>
   </url>
@@ -127,10 +137,6 @@
   
   <url>
     <loc>/author/joseph-d.-janizek/</loc>
-  </url>
-  
-  <url>
-    <loc>/post/</loc>
   </url>
   
   <url>

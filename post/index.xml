@@ -5,12 +5,566 @@
     <link>/post/</link>
       <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Posts</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 11 Jul 2020 19:25:15 -0400</lastBuildDate>
     <image>
       <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
       <title>Posts</title>
       <link>/post/</link>
     </image>
+    
+    <item>
+      <title>Finding interactions in deep neural networks with Integrated Hessians</title>
+      <link>/post/integrated_hessians/</link>
+      <pubDate>Sat, 11 Jul 2020 19:25:15 -0400</pubDate>
+      <guid>/post/integrated_hessians/</guid>
+      <description>&lt;p&gt;&lt;em&gt;This is (hopefully) an intuitive description of our new feature interaction method, Integrated Hessians.&lt;/em&gt;
+&lt;em&gt;If you want a deeper dive into the math, you can check out our 
+&lt;a href=&#34;https://arxiv.org/abs/2002.04138&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;paper on arXiv&lt;/a&gt;.&lt;/em&gt;
+&lt;em&gt;If you just want the code, you can check out our 
+&lt;a href=&#34;https://github.com/suinleelab/path_explain&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;repo on GitHub&lt;/a&gt;.&lt;/em&gt;
+&lt;em&gt;Please feel free to reach out with any questions or issues, especially if you want to apply Integrated Hessians to your own models!&lt;/em&gt;&lt;/p&gt;
+&lt;h2&gt;Table of Contents&lt;/h2&gt;
+&lt;nav id=&#34;TableOfContents&#34;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&#34;#intro-why-would-i-want-to-find-feature-interactions&#34;&gt;Intro: Why would I want to find feature interactions?&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#our-approach-integrated-hessians&#34;&gt;Our approach: Integrated Hessians&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#why-cant-i-just-look-at-the-hessian&#34;&gt;Why can&amp;rsquo;t I just look at the Hessian?&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#one-weird-trick-to-find-interaction-in-relu-networks&#34;&gt;One weird trick to find interaction in ReLU networks&amp;hellip;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#hyperbole-and-a-different-type-of-saturation&#34;&gt;Hyperbole and a Different Type of Saturation&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#conclusions&#34;&gt;Conclusions&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+&lt;h2 id=&#34;intro-why-would-i-want-to-find-feature-interactions&#34;&gt;Intro: Why would I want to find feature interactions?&lt;/h2&gt;
+&lt;p&gt;One of the most popular areas of research in the field of explainable AI has been &lt;em&gt;feature attribution methods&lt;/em&gt;,
+which aim to identify the input features that have the greatest impact on a machine learning model&amp;rsquo;s
+predictions. While 
+&lt;a href=&#34;https://github.com/slundberg/shap&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;these&lt;/a&gt; 
+&lt;a href=&#34;https://github.com/marcotcr/lime&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;methods&lt;/a&gt; 
+&lt;a href=&#34;https://github.com/ankurtaly/Integrated-Gradients&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;have&lt;/a&gt;
+
+&lt;a href=&#34;https://github.com/suinleelab/attributionpriors&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;been&lt;/a&gt; 
+&lt;a href=&#34;https://github.com/kundajelab/deeplift&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;helpful&lt;/a&gt; for a wide variety of applications,
+users may desire a greater degree of insight into model performance than a single scalar value per feature can provide.&lt;/p&gt;
+&lt;p&gt;For example, a 
+&lt;a href=&#34;https://arxiv.org/abs/1909.06342&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;recent survey of industry data scientists using explainable AI in deployment&lt;/a&gt; showed that many
+would like to be able to identify feature interactions – in the words of one of the data scientist interviewed, the ability to identify how “feature A will impact feature B.”
+To make the idea of feature interaction more concrete, we can consider a two-feature model of the very deadly Hypothetical Disease. In this model,
+the risk of Hypothetical Disease is determined solely by a patient&amp;rsquo;s gender and age. We can visualize the risk of disease for two patients, where Patient 1 is a 67 year-old man and
+Patient 2 is a 67 year-old woman. Looking at the overall risk, we can see that Patient 1 has a significantly higher overall risk than Patient 2. To understand why, we can examine
+the feature attributions for this model.&lt;/p&gt;
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure id=&#34;figure-hypothetical-disease-risk-attribution&#34;&gt;
+
+
+  &lt;a data-fancybox=&#34;&#34; href=&#34;/post/integrated_hessians/blog_post_figure_1a_hu690b206e101f352737ea661d94c34443_63000_2000x2000_fit_lanczos_2.png&#34; data-caption=&#34;Hypothetical disease risk attribution&#34;&gt;
+
+
+  &lt;img data-src=&#34;/post/integrated_hessians/blog_post_figure_1a_hu690b206e101f352737ea661d94c34443_63000_2000x2000_fit_lanczos_2.png&#34; class=&#34;lazyload&#34; alt=&#34;&#34; width=&#34;852&#34; height=&#34;512&#34;&gt;
+&lt;/a&gt;
+
+
+  
+  
+  &lt;figcaption&gt;
+    Hypothetical disease risk attribution
+  &lt;/figcaption&gt;
+
+
+&lt;/figure&gt;
+
+&lt;p&gt;Looking at the attributions for gender, we see that Patient 1&amp;rsquo;s male gender contributes more risk than Patient 2&amp;rsquo;s female gender.
+This makes intuitive sense, as gender differences are often associated with different risks of disease.&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; When we look at the age attribution, however,
+we can see that something more interesting is happening. While both patients are 67 years old, Patient 1 has &lt;em&gt;more risk&lt;/em&gt; from being 67
+than Patient 2. This is due to a &lt;em&gt;feature interaction&lt;/em&gt; between gender and age. In this model, being a man not only
+carries a higher risk of disease than being a woman, it also &lt;em&gt;increases&lt;/em&gt; the amount of risk due to age.&lt;/p&gt;
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure id=&#34;figure-hypothetical-disease-risk-interaction&#34;&gt;
+
+
+  &lt;a data-fancybox=&#34;&#34; href=&#34;/post/integrated_hessians/blog_post_figure_1b_hud206a30b6fab2d45830880f462eed3c6_129482_2000x2000_fit_lanczos_2.png&#34; data-caption=&#34;Hypothetical disease risk interaction&#34;&gt;
+
+
+  &lt;img data-src=&#34;/post/integrated_hessians/blog_post_figure_1b_hud206a30b6fab2d45830880f462eed3c6_129482_2000x2000_fit_lanczos_2.png&#34; class=&#34;lazyload&#34; alt=&#34;&#34; width=&#34;886&#34; height=&#34;420&#34;&gt;
+&lt;/a&gt;
+
+
+  
+  
+  &lt;figcaption&gt;
+    Hypothetical disease risk interaction
+  &lt;/figcaption&gt;
+
+
+&lt;/figure&gt;
+
+&lt;p&gt;While it is pretty easy to figure out that gender is the feature interacting with age in this 2-feature model,
+trying to determine which features are responsible for interactions in high-dimensional data modeled with deep neural networks is more complicated.
+The next section will detail how we tried to solve this problem.&lt;/p&gt;
+&lt;h2 id=&#34;our-approach-integrated-hessians&#34;&gt;Our approach: Integrated Hessians&lt;/h2&gt;
+&lt;p&gt;The data scientist mentioned in the introduction who wanted to understand how &amp;ldquo;feature A will impact feature B&amp;rdquo; provides the clearest motivation for our method.
+In essence, while &lt;em&gt;feature attribution&lt;/em&gt; methods aim to explain how the value of each input feature will impact a &lt;em&gt;model&amp;rsquo;s output&lt;/em&gt;,
+our &lt;em&gt;feature interaction&lt;/em&gt; method aims to explain how the value of each input feature will impact each other feature&amp;rsquo;s &lt;em&gt;attribution&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;One of the most popular methods for feature attribution for neural networks is Integrated Gradients.&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;
+This method attributes a scalar importance to each feature $i$ by averaging the gradients of the model $f$ along a linear
+interpolation path between a baseline $x&#39;$ and a target sample $x$:
+$$ \phi_i (x) = (x_i - x&amp;rsquo;_i) \times \int_{\alpha=0}^{1} \frac{ \partial f(x&amp;rsquo; + \alpha(x-x&amp;rsquo;)) }{\partial x_i} d\alpha. $$&lt;/p&gt;
+&lt;p&gt;The core insight of our approach was to realize that Integrated Gradients (which can be used to explain any differentiable function $f : \mathbb{R}^N \mapsto \mathbb{R}$)
+&lt;em&gt;is itself&lt;/em&gt; a differentiable function $ \phi_i : \mathbb{R}^N \mapsto \mathbb{R}$.&lt;sup id=&#34;fnref:3&#34;&gt;&lt;a href=&#34;#fn:3&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;3&lt;/a&gt;&lt;/sup&gt;
+Therefore, we can apply Integrated Gradients &lt;em&gt;to itself&lt;/em&gt; to identify feature interactions of the exact form desired by our data scientist. The Integrated Hessians interaction between features $i$ and $j$ is the
+impact of Feature $i$ on Feature $j$&#39;s attribution:
+$$ \Gamma_{i,j} = \phi_i (\phi_j(x)). $$
+This is the inspiration for the title of our paper, &amp;ldquo;Explaining Explanations,&amp;rdquo; since our interactions are found by explaining the output of an explanation method.&lt;sup id=&#34;fnref:3&#34;&gt;&lt;a href=&#34;#fn:3&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;3&lt;/a&gt;&lt;/sup&gt;
+This captures a human-intuitive definition of the interaction between two features: the interaction is the impact these features have on each other&amp;rsquo;s importance.&lt;/p&gt;
+&lt;h2 id=&#34;why-cant-i-just-look-at-the-hessian&#34;&gt;Why can&amp;rsquo;t I just look at the Hessian?&lt;/h2&gt;
+&lt;p&gt;To provide some more context why you might want to use Integrated Hessians to find feature interactions, we try to explain the cases where existing methods
+may fall short. One obvious alternate approach would be to look at the network&amp;rsquo;s Hessian. While the network&amp;rsquo;s input Hessian contains information about the interaction between pairs of features,
+it suffers from the problem of &lt;em&gt;saturation&lt;/em&gt;.&lt;/p&gt;
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure id=&#34;figure-neural-network-with-sigmoid-activation-representing-an-xor-function&#34;&gt;
+
+
+  &lt;a data-fancybox=&#34;&#34; href=&#34;/post/integrated_hessians/xor_blog_hu4f866317606ce504d4775cc9cdf2a681_789738_2000x2000_fit_lanczos_2.png&#34; data-caption=&#34;Neural Network with sigmoid activation representing an XOR function&#34;&gt;
+
+
+  &lt;img data-src=&#34;/post/integrated_hessians/xor_blog_hu4f866317606ce504d4775cc9cdf2a681_789738_2000x2000_fit_lanczos_2.png&#34; class=&#34;lazyload&#34; alt=&#34;&#34; width=&#34;1390&#34; height=&#34;1356&#34;&gt;
+&lt;/a&gt;
+
+
+  
+  
+  &lt;figcaption&gt;
+    Neural Network with sigmoid activation representing an XOR function
+  &lt;/figcaption&gt;
+
+
+&lt;/figure&gt;
+
+&lt;p&gt;For example, consider a neural network representation of an XOR function (which has been scaled between -10 and 10).
+This network is &amp;ldquo;on&amp;rdquo; when either one of the two binary-valued features have a value of 1, but &amp;ldquo;off&amp;rdquo; when both features are either 0 or 1.
+At every point on the data manifold the network&amp;rsquo;s output is 
+&lt;a href=&#34;http://www.unofficialgoogledatascience.com/2017/03/attributing-deep-networks-prediction-to.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;saturated (flat)&lt;/a&gt;, meaning that its gradients and Hessians will be 0.
+While there is clearly an interaction between the two features, simply considering the input Hessian completely fails to find the interaction.&lt;/p&gt;
+&lt;p&gt;With Integrated Hessians, we consider many points along the straight-line path between a baseline and the input we want to explain. While the gradients and Hessians
+are saturated on all of the data manifold points, we come across many places with well-defined curvature between these points. Integrated Hessians is therefore able
+to correctly detect the &lt;em&gt;negative interaction&lt;/em&gt; between the two features. This negative interaction matches human intuition. Each feature contributes positively
+to the network&amp;rsquo;s output when turned on alone. When turned on together, however, the interaction cancels out the positive contribution of each feature&amp;rsquo;s individual contribution.&lt;/p&gt;
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure id=&#34;figure-integrated-hessians-interactions-for-sigmoid-xor-network&#34;&gt;
+
+
+  &lt;a data-fancybox=&#34;&#34; href=&#34;/post/integrated_hessians/ih_xor_hu9958170b4cb5f439d3c6cf048a4963fa_83949_2000x2000_fit_lanczos_2.png&#34; data-caption=&#34;Integrated Hessians interactions for sigmoid XOR network&#34;&gt;
+
+
+  &lt;img data-src=&#34;/post/integrated_hessians/ih_xor_hu9958170b4cb5f439d3c6cf048a4963fa_83949_2000x2000_fit_lanczos_2.png&#34; class=&#34;lazyload&#34; alt=&#34;&#34; width=&#34;932&#34; height=&#34;898&#34;&gt;
+&lt;/a&gt;
+
+
+  
+  
+  &lt;figcaption&gt;
+    Integrated Hessians interactions for sigmoid XOR network
+  &lt;/figcaption&gt;
+
+
+&lt;/figure&gt;
+
+&lt;p&gt;In addition to our approach and the input Hessian, there are a variety of other methods that have been proposed for finding feature interactions in machine
+learning models. These include the 
+&lt;a href=&#34;https://link.springer.com/article/10.1007/s001820050125&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Shapley Interaction Index&lt;/a&gt; and the 
+&lt;a href=&#34;https://arxiv.org/abs/1902.05622&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Shapley-Taylor Interaction Index&lt;/a&gt;, which, like our approach, have game-theoretic connections. Another set of approaches
+include methods based on Group Attributions, like 
+&lt;a href=&#34;https://arxiv.org/abs/1801.05453&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Contextual Decomposition&lt;/a&gt; and the 
+&lt;a href=&#34;https://arxiv.org/abs/2006.10965&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Archipelago framework&lt;/a&gt;.&lt;sup id=&#34;fnref:4&#34;&gt;&lt;a href=&#34;#fn:4&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;4&lt;/a&gt;&lt;/sup&gt; Finally, there are 
+&lt;a href=&#34;https://arxiv.org/abs/1705.04977&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;em&gt;global&lt;/em&gt; feature interaction detection methods&lt;/a&gt;,
+which find interactions for an entire model rather than for specific predictions.&lt;/p&gt;
+&lt;p&gt;While these are all good methods, our paper includes a more thorough discussion of the trade-offs between these different approaches. Our main takeaway is that Integrated Hessians strikes a good balance
+between &lt;em&gt;computational efficiency&lt;/em&gt; and &lt;em&gt;accuracy&lt;/em&gt;, especially for models with larger numbers of features.&lt;/p&gt;
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure id=&#34;figure-computation-time-required-to-get-interactions&#34;&gt;
+
+
+  &lt;a data-fancybox=&#34;&#34; href=&#34;/post/integrated_hessians/computation_time_hu4c4dc9920a1fa0aba5d2770328801f62_473351_2000x2000_fit_lanczos_2.png&#34; data-caption=&#34;Computation time required to get interactions&#34;&gt;
+
+
+  &lt;img data-src=&#34;/post/integrated_hessians/computation_time_hu4c4dc9920a1fa0aba5d2770328801f62_473351_2000x2000_fit_lanczos_2.png&#34; class=&#34;lazyload&#34; alt=&#34;&#34; width=&#34;1816&#34; height=&#34;1262&#34;&gt;
+&lt;/a&gt;
+
+
+  
+  
+  &lt;figcaption&gt;
+    Computation time required to get interactions
+  &lt;/figcaption&gt;
+
+
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;one-weird-trick-to-find-interaction-in-relu-networks&#34;&gt;One weird trick to find interaction in ReLU networks&amp;hellip;&lt;/h2&gt;
+&lt;p&gt;If you were paying close attention earlier, you might have noticed an apparent problem with our method. While Integrated Hessians can get around the problem of saturation in
+neural networks by integrating over a path, there are a large subset of networks where it will be impossible to find curvature &lt;em&gt;anywhere&lt;/em&gt; in the input space &amp;ndash; networks with
+ReLU activations. Since these networks are piecewise-linear, differentiating the model twice will always lead to values of 0. While this might sound like an impassable obstacle for our method,
+we found a &lt;em&gt;smooth&lt;/em&gt; way to get around this issue.&lt;/p&gt;
+&lt;p&gt;While a ReLU function has all 0 higher derivatives, it has a smooth approximation with very nicely defined higher derivatives &amp;ndash; the SoftPlus function: $\textrm{SoftPlus}_{\beta}(x) = \frac{1}{\beta}\log (1 + e^{-\beta x})$.&lt;/p&gt;
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure id=&#34;figure-softplus-smoothly-approximates-relu&#34;&gt;
+
+
+  &lt;a data-fancybox=&#34;&#34; href=&#34;/post/integrated_hessians/SoftPlusReLU_hu49d16d9808a14263968e374eebc88a0f_12947_2000x2000_fit_lanczos_2.png&#34; data-caption=&#34;SoftPlus smoothly approximates ReLU&#34;&gt;
+
+
+  &lt;img data-src=&#34;/post/integrated_hessians/SoftPlusReLU_hu49d16d9808a14263968e374eebc88a0f_12947_2000x2000_fit_lanczos_2.png&#34; class=&#34;lazyload&#34; alt=&#34;&#34; width=&#34;368&#34; height=&#34;262&#34;&gt;
+&lt;/a&gt;
+
+
+  
+  
+  &lt;figcaption&gt;
+    SoftPlus smoothly approximates ReLU
+  &lt;/figcaption&gt;
+
+
+&lt;/figure&gt;
+
+&lt;p&gt;For example, consider the example&lt;sup id=&#34;fnref:5&#34;&gt;&lt;a href=&#34;#fn:5&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;5&lt;/a&gt;&lt;/sup&gt; of a single ReLU neuron with two input features, $f(x,y) = \textrm{ReLU}(-\frac{3x}{2} - 2y +2)$. We would hope to find a &lt;em&gt;positive interaction&lt;/em&gt;
+between $x$ and $y$, since when both $x$ and $y$ have large values the network output is &lt;em&gt;less negative&lt;/em&gt; than it would be if the function were additive.
+Unfortunately, since the ReLU network is piecewise-linear, it seems like Integrated Hessians will not find the interaction. If we apply Integrated Hessians to the SoftPlus approximation of this function, however,
+we see that Integrated Hessians can correctly identify the positive interaction between $x$ and $y$, in addition to the negative main effect for each feature.&lt;/p&gt;
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure id=&#34;figure-softplus-replacement-for-a-single-relu-function-for-large-values-of-beta-in-the-softplus-function-20-in-this-case-the-two-functions-are-virtually-indistinguishable&#34;&gt;
+
+
+  &lt;a data-fancybox=&#34;&#34; href=&#34;/post/integrated_hessians/SingleNeuronSmoothingBetterLabels_hu37a4b3d4d06d2d33e77347e5d995ca16_1911162_2000x2000_fit_lanczos_2.png&#34; data-caption=&#34;Softplus Replacement for a single ReLU function. For large values of $\beta$ in the SoftPlus function (20 in this case), the two functions are virtually indistinguishable.&#34;&gt;
+
+
+  &lt;img data-src=&#34;/post/integrated_hessians/SingleNeuronSmoothingBetterLabels_hu37a4b3d4d06d2d33e77347e5d995ca16_1911162_2000x2000_fit_lanczos_2.png&#34; class=&#34;lazyload&#34; alt=&#34;&#34; width=&#34;1958&#34; height=&#34;830&#34;&gt;
+&lt;/a&gt;
+
+
+  
+  
+  &lt;figcaption&gt;
+    Softplus Replacement for a single ReLU function. For large values of $\beta$ in the SoftPlus function (20 in this case), the two functions are virtually indistinguishable.
+  &lt;/figcaption&gt;
+
+
+&lt;/figure&gt;
+
+&lt;p&gt;While it&amp;rsquo;s nice to be able to explain this smooth approximation to a single neuron, what&amp;rsquo;s even more impressive is that this trick can be applied to an entire fully trained neural network.
+To explain a ReLU network, we can simply replace all of the ReLU activations with SoftPlus activations and explain the network with smooth activations (without any need to retrain).&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;blog_post_figure_2.png&#34; alt=&#34;Beta smoothing&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We got this idea from this excellent paper on 
+&lt;a href=&#34;https://arxiv.org/abs/1906.07983&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;the geometry of neural network decision surfaces&lt;/a&gt; and the impact of this geometry on model explanation. Theoretically and empirically, this is a good approximation.
+One of my favorite results from our paper that I won&amp;rsquo;t really dig into here is that the smoother you make the approximation, the less samples along the interpolation path are necessary to get a good approximation to the &amp;ldquo;true&amp;rdquo; integral in Integrated Hessians.&lt;/p&gt;
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure id=&#34;figure-the-more-you-smooth-the-network-the-more-similar-the-gradients-and-hessians-along-the-interpolation-path-become&#34;&gt;
+
+
+  &lt;a data-fancybox=&#34;&#34; href=&#34;/post/integrated_hessians/level_curves_hu47a642f82dc537d3da823301b9509f9c_684342_2000x2000_fit_lanczos_2.png&#34; data-caption=&#34;The more you smooth the network, the more similar the gradients and Hessians along the interpolation path become.&#34;&gt;
+
+
+  &lt;img data-src=&#34;/post/integrated_hessians/level_curves_hu47a642f82dc537d3da823301b9509f9c_684342_2000x2000_fit_lanczos_2.png&#34; class=&#34;lazyload&#34; alt=&#34;&#34; width=&#34;2606&#34; height=&#34;912&#34;&gt;
+&lt;/a&gt;
+
+
+  
+  
+  &lt;figcaption&gt;
+    The more you smooth the network, the more similar the gradients and Hessians along the interpolation path become.
+  &lt;/figcaption&gt;
+
+
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;hyperbole-and-a-different-type-of-saturation&#34;&gt;Hyperbole and a Different Type of Saturation&lt;/h2&gt;
+&lt;p&gt;One cool aspect of interpreting models is that we often find that models have learned surprising relationships between features. For example, we took a Transformer model
+that had been fine-tuned to predict whether a movie review had a positive or negative sentiment. We then wrote a gratuitously negative movie review, and used Integrated Hessians to find the interactions learned by the model.&lt;/p&gt;
+&lt;p&gt;Our review, &amp;ldquo;A bad, terrible, awful, horrible movie,&amp;rdquo; was of course predicted to have negative sentiment. Furthermore, each word gets an overwhelmingly negative first-order attribution. When we look at the interactions, however,
+we see something surprising.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;Saturation.png&#34; alt=&#34;Saturation&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Each negative adjective in the phrase has a very slight &lt;em&gt;positive&lt;/em&gt; interaction with the other negative adjectives. It seems that the model has learned a sort of saturation effect in the presence of hyperbolic speech &amp;ndash;
+when we combine all of the negative adjectives together, the model predicts a slightly less negative sentiment than we might expect if each word contributed negative sentiment independently.
+Whether this is desirable behavior reflecting real trends in the English language, or something the model learned in error, Integrated Hessians is able to reveal that the model has learned this trend at all.
+This highlights the benefit of examining feature &lt;em&gt;interactions&lt;/em&gt; in models as opposed to just feature &lt;em&gt;attributions&lt;/em&gt;. The attributions to the phrases and subphrases composing our review were all overwhelmingly negative.
+Examining the individual feature interactions shows an interesting trend that we wouldn&amp;rsquo;t have been able to find otherwise.&lt;/p&gt;
+&lt;h2 id=&#34;conclusions&#34;&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;From our investigation, we can see that there are meaningful and interesting interactions between features in neural networks &amp;ndash; Integrated Hessians can help us find them.
+While it was fun coming up with theoretical justifications in the paper for how nice our method is, one of our major goals is to actually make it usable for anyone who wants to
+find interaction in their own models! We encourage you to check out the 
+&lt;a href=&#34;https://github.com/suinleelab/path_explain&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;GitHub repo&lt;/a&gt; (we now support TensorFlow 2 &lt;em&gt;and&lt;/em&gt; PyTorch), and reach out to us with &lt;em&gt;any and all&lt;/em&gt; questions and critiques about our method or software.&lt;/p&gt;
+&lt;!-- ## How do I get the interactions (code)? --&gt;
+&lt;!-- 
+### Get interactions
+
+With an additional three lines of code (one to import the explainer, one to wrap the model with the explainer, 
+and one call to the explainer object), you can get attributions or interactions for your model:
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;
+&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
+&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 1
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 2
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 3
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 4
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 5
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 6
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 7
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 8
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt; 9
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;10
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;11
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;12
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;13
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;14
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;15
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;16
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;17
+&lt;/span&gt;&lt;span style=&#34;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;18
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
+&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; path_explain &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; PathExplainerTF 
+
+&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt; Model training &lt;span style=&#34;color:#f92672&#34;&gt;or&lt;/span&gt; loading code goes here &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;
+
+explainer &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PathExplainerTF(model)
+attributions &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; explainer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;attributions(inputs&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;x_test,
+                                      baseline&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;x_train,
+                                      batch_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;,
+                                      num_samples &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;,
+                                      use_expectation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; True,
+                                      output_indices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+                                      
+interactions &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; explainer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;attributions(inputs&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;x_test,
+                                      baseline&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;x_train,
+                                      batch_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;,
+                                      num_samples &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;,
+                                      use_expectation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; True,
+                                      output_indices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+### Visualize interactions
+
+We&#39;ve also included a plotting library to help visualize the attributions and interactions:
+ --&gt;
+&lt;!-- 
+
+## POSTSCRIPT: Feature Interaction vs. Group Attribution
+
+I briefly wanted to address another recent method that has come out since we released our paper: the Archipelago method. I really liked their method, and I think that discussing the
+differences between their approach and ours can help to clarify an ambiguity or confusion that has come up in recent literature on interaction detection and attribution. Their method essentially consists of three steps:
+1) Find pairs of interacting features.[^5]
+2) Join interacting features into disjoint sets of features that interact within the set but with no interaction between the disjoint sets.
+3) Attribute importance to each of the sets.
+
+While I liked their method, I think my least favorite parts of their paper are their repeated references to our approach where they say our method is _uninterpretable_. I think these critiques basically come from a misunderstanding of what our method is trying to get at. Looking at the second figure from their paper makes this particularly clear.
+
+[^5]: Their interaction detection method, ArchDetect, is similar to the Shapley Interaction Index. ArchDetect differs in that they only consider 2 of the possible interaction contexts rather than all possible contexts, and only care about interaction _magnitude_ and not _direction_.
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure id=&#34;figure-fig-2-from-the-archipelago-paper-i-guess-they-didnt-like-our-section-on-explaining-relu-networks--&#34;&gt;
+
+
+  &lt;a data-fancybox=&#34;&#34; href=&#34;/post/integrated_hessians/Fig2Archipelago_hub49dfa2f30da8eb202d9996fe8067a88_688462_2000x2000_fit_lanczos_2.png&#34; data-caption=&#34;Fig. 2 from the Archipelago paper. I guess they didn&amp;amp;rsquo;t like our section on explaining ReLU networks 😭😭😭&#34;&gt;
+
+
+  &lt;img data-src=&#34;/post/integrated_hessians/Fig2Archipelago_hub49dfa2f30da8eb202d9996fe8067a88_688462_2000x2000_fit_lanczos_2.png&#34; class=&#34;lazyload&#34; alt=&#34;&#34; width=&#34;2180&#34; height=&#34;1016&#34;&gt;
+&lt;/a&gt;
+
+
+  
+  
+  &lt;figcaption&gt;
+    Fig. 2 from the Archipelago paper. I guess they didn&amp;rsquo;t like our section on explaining ReLU networks 😭😭😭
+  &lt;/figcaption&gt;
+
+
+&lt;/figure&gt;
+
+
+At the end of the day, their approach goes after $\\phi$ while ours goes after $\\delta$. 
+ --&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;Emphasis on the word &lt;em&gt;associated&lt;/em&gt; here. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;Integrated Gradients is the unique method that fulfills a bunch of desirable axioms (and is closely connected to the Aumann-Shapley value), all of which you can read about in the paper proposing 
+&lt;a href=&#34;https://arxiv.org/abs/1703.01365&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;that method&lt;/a&gt;. &lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:3&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;The logic behind naming our method Integrated Hessians becomes more obvious when we expand $ \Gamma_{i,j} $:
+$$ \Gamma_{i,j} = (x_i - x_i&amp;rsquo;)(x_j - x_j&amp;rsquo;) \times \int_{\beta = 0}^{1}\int_{\alpha = 0}^{1} \alpha \beta \frac{\partial^2 f(x&amp;rsquo; + \alpha \beta(x - x&amp;rsquo;))}{\partial x_i \partial x_j}. $$ By directly computing the interpolated Hessians whenever possible instead of simply recursively applying integrated gradients to itself,
+we can take advantage of GPU acceleration to greatly increase our method&amp;rsquo;s efficiency. &lt;a href=&#34;#fnref:3&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:4&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;More in a future blog post about this, but I think both of these approaches have a different notion of interaction than Integrated Hessians does.
+I would call their methods something more like &amp;ldquo;Group Attribution&amp;rdquo; than &amp;ldquo;Interaction&amp;rdquo; &amp;ndash; they both are concerned with attributing importance to interacting
+groups of features, while our method focuses on finding the magnitude and direction of the interactions &lt;em&gt;between&lt;/em&gt; specific features. Their approaches aren&amp;rsquo;t
+any better or worse than ours, they just aim to answer a fundamentally different question and find a fundamentally different value (which is why their approaches
+do so poorly on the benchmarks &lt;em&gt;we&lt;/em&gt; design, and ours probably do badly on the benchmarks &lt;em&gt;they&lt;/em&gt; design). &lt;a href=&#34;#fnref:4&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:5&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;This example borrowed from Fig. 2 of the 
+&lt;a href=&#34;https://arxiv.org/abs/2006.10965&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Archipelago paper&lt;/a&gt;. Despite their objection in the caption to that figure, Integrated Hessians &lt;em&gt;does&lt;/em&gt; apply to ReLU networks. &lt;a href=&#34;#fnref:5&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+</description>
+    </item>
     
   </channel>
 </rss>
