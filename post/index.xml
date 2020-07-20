@@ -19,7 +19,9 @@
       <guid>/post/integrated_hessians/</guid>
       <description>&lt;p&gt;&lt;em&gt;This is (hopefully) an intuitive description of our new feature interaction method, Integrated Hessians.&lt;/em&gt;
 &lt;em&gt;If you want a deeper dive into the math, you can check out our 
-&lt;a href=&#34;https://arxiv.org/abs/2002.04138&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;paper on arXiv&lt;/a&gt;.&lt;/em&gt;
+&lt;a href=&#34;https://arxiv.org/abs/2002.04138&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;paper on arXiv&lt;/a&gt; (written with my co-author 
+&lt;a href=&#34;https://psturmfels.github.io/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Pascal Sturmfels&lt;/a&gt; and our advisor 
+&lt;a href=&#34;https://suinlee.cs.washington.edu/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Su-In Lee&lt;/a&gt;).&lt;/em&gt;
 &lt;em&gt;If you just want the code, you can check out our 
 &lt;a href=&#34;https://github.com/suinleelab/path_explain&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;repo on GitHub&lt;/a&gt;.&lt;/em&gt;
 &lt;em&gt;Please feel free to reach out with any questions or issues, especially if you want to apply Integrated Hessians to your own models!&lt;/em&gt;&lt;/p&gt;
@@ -47,7 +49,7 @@ predictions. While
 users may desire a greater degree of insight into model performance than a single scalar value per feature can provide.&lt;/p&gt;
 &lt;p&gt;For example, a 
 &lt;a href=&#34;https://arxiv.org/abs/1909.06342&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;recent survey of industry data scientists using explainable AI in deployment&lt;/a&gt; showed that many
-would like to be able to identify feature interactions – in the words of one of the data scientist interviewed, the ability to identify how “feature A will impact feature B.”
+would like to be able to identify feature interactions – in the words of one of the data scientists interviewed, the ability to identify how “feature A will impact feature B.”
 To make the idea of feature interaction more concrete, we can consider a two-feature model of the very deadly Hypothetical Disease. In this model,
 the risk of Hypothetical Disease is determined solely by a patient&amp;rsquo;s gender and age. We can visualize the risk of disease for two patients, where Patient 1 is a 67 year-old man and
 Patient 2 is a 67 year-old woman. Looking at the overall risk, we can see that Patient 1 has a significantly higher overall risk than Patient 2. To understand why, we can examine
@@ -150,7 +152,7 @@ $$ \Gamma_{i,j} = \phi_i (\phi_j(x)). $$
 This is the inspiration for the title of our paper, &amp;ldquo;Explaining Explanations,&amp;rdquo; since our interactions are found by explaining the output of an explanation method.&lt;sup id=&#34;fnref:3&#34;&gt;&lt;a href=&#34;#fn:3&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;3&lt;/a&gt;&lt;/sup&gt;
 This captures a human-intuitive definition of the interaction between two features: the interaction is the impact these features have on each other&amp;rsquo;s importance.&lt;/p&gt;
 &lt;h2 id=&#34;why-cant-i-just-look-at-the-hessian&#34;&gt;Why can&amp;rsquo;t I just look at the Hessian?&lt;/h2&gt;
-&lt;p&gt;To provide some more context why you might want to use Integrated Hessians to find feature interactions, we try to explain the cases where existing methods
+&lt;p&gt;To provide some more context as to why you might want to use Integrated Hessians to find feature interactions, we try to explain the cases where existing methods
 may fall short. One obvious alternate approach would be to look at the network&amp;rsquo;s Hessian. While the network&amp;rsquo;s input Hessian contains information about the interaction between pairs of features,
 it suffers from the problem of &lt;em&gt;saturation&lt;/em&gt;.&lt;/p&gt;
 
