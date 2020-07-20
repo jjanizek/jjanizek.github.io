@@ -587,7 +587,7 @@
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    11 min read
+    12 min read
   </span>
   
 
@@ -625,7 +625,9 @@
     <div class="article-style">
       <p><em>This is (hopefully) an intuitive description of our new feature interaction method, Integrated Hessians.</em>
 <em>If you want a deeper dive into the math, you can check out our 
-<a href="https://arxiv.org/abs/2002.04138" target="_blank" rel="noopener">paper on arXiv</a>.</em>
+<a href="https://arxiv.org/abs/2002.04138" target="_blank" rel="noopener">paper on arXiv</a> (written with my co-author 
+<a href="https://psturmfels.github.io/" target="_blank" rel="noopener">Pascal Sturmfels</a> and our advisor 
+<a href="https://suinlee.cs.washington.edu/" target="_blank" rel="noopener">Su-In Lee</a>).</em>
 <em>If you just want the code, you can check out our 
 <a href="https://github.com/suinleelab/path_explain" target="_blank" rel="noopener">repo on GitHub</a>.</em>
 <em>Please feel free to reach out with any questions or issues, especially if you want to apply Integrated Hessians to your own models!</em></p>
@@ -653,7 +655,7 @@ predictions. While
 users may desire a greater degree of insight into model performance than a single scalar value per feature can provide.</p>
 <p>For example, a 
 <a href="https://arxiv.org/abs/1909.06342" target="_blank" rel="noopener">recent survey of industry data scientists using explainable AI in deployment</a> showed that many
-would like to be able to identify feature interactions – in the words of one of the data scientist interviewed, the ability to identify how “feature A will impact feature B.”
+would like to be able to identify feature interactions – in the words of one of the data scientists interviewed, the ability to identify how “feature A will impact feature B.”
 To make the idea of feature interaction more concrete, we can consider a two-feature model of the very deadly Hypothetical Disease. In this model,
 the risk of Hypothetical Disease is determined solely by a patient&rsquo;s gender and age. We can visualize the risk of disease for two patients, where Patient 1 is a 67 year-old man and
 Patient 2 is a 67 year-old woman. Looking at the overall risk, we can see that Patient 1 has a significantly higher overall risk than Patient 2. To understand why, we can examine
@@ -756,7 +758,7 @@ $$ \Gamma_{i,j} = \phi_i (\phi_j(x)). $$
 This is the inspiration for the title of our paper, &ldquo;Explaining Explanations,&rdquo; since our interactions are found by explaining the output of an explanation method.<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>
 This captures a human-intuitive definition of the interaction between two features: the interaction is the impact these features have on each other&rsquo;s importance.</p>
 <h2 id="why-cant-i-just-look-at-the-hessian">Why can&rsquo;t I just look at the Hessian?</h2>
-<p>To provide some more context why you might want to use Integrated Hessians to find feature interactions, we try to explain the cases where existing methods
+<p>To provide some more context as to why you might want to use Integrated Hessians to find feature interactions, we try to explain the cases where existing methods
 may fall short. One obvious alternate approach would be to look at the network&rsquo;s Hessian. While the network&rsquo;s input Hessian contains information about the interaction between pairs of features,
 it suffers from the problem of <em>saturation</em>.</p>
 
@@ -1299,7 +1301,7 @@ do so poorly on the benchmarks <em>we</em> design, and ours probably do badly on
 
       <div class="media-body">
         <h5 class="card-title"><a href="/">Joseph D. Janizek</a></h5>
-        <h6 class="card-subtitle">MD-PhD Candidate</h6>
+        <h6 class="card-subtitle">MD-PhD Student</h6>
         <p class="card-text">My research interests include Explainable AI, computational biology, and robust medical machine learning tools.</p>
         <ul class="network-icon" aria-hidden="true">
   
