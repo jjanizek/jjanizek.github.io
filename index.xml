@@ -5,12 +5,36 @@
     <link>/</link>
       <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <description>Joseph D. Janizek</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 05 Sep 2020 14:40:02 -0400</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 25 Sep 2020 14:40:31 -0400</lastBuildDate>
     <image>
       <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
       <title>Joseph D. Janizek</title>
       <link>/</link>
     </image>
+    
+    <item>
+      <title>Learning Deep Attribution Priors Based On Prior Knowledge</title>
+      <link>/publication/dapr/</link>
+      <pubDate>Fri, 25 Sep 2020 14:40:31 -0400</pubDate>
+      <guid>/publication/dapr/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>AI for radiographic COVID-19 detection selects shortcuts over signal</title>
+      <link>/publication/cxr_covid/</link>
+      <pubDate>Tue, 22 Sep 2020 19:12:24 -0400</pubDate>
+      <guid>/publication/cxr_covid/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>AI for radiographic COVID-19 detection selects shortcuts over signal</title>
+      <link>/publication/</link>
+      <pubDate>Tue, 22 Sep 2020 19:12:24 -0400</pubDate>
+      <guid>/publication/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Adversarial Deconfounding Autoencoder for Learning Robust Gene Expression Embeddings</title>
@@ -633,14 +657,6 @@ do so poorly on the benchmarks &lt;em&gt;we&lt;/em&gt; design, and ours probably
     </item>
     
     <item>
-      <title>Learning Deep Attribution Priors Based On Prior Knowledge</title>
-      <link>/publication/dapr/</link>
-      <pubDate>Sun, 01 Dec 2019 14:40:31 -0400</pubDate>
-      <guid>/publication/dapr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Learning explainable models using attribution priors</title>
       <link>/publication/attribution_priors/</link>
       <pubDate>Wed, 05 Jun 2019 14:40:45 -0400</pubDate>
@@ -670,6 +686,27 @@ do so poorly on the benchmarks &lt;em&gt;we&lt;/em&gt; design, and ours probably
       <pubDate>Fri, 01 Jun 2018 14:41:07 -0400</pubDate>
       <guid>/publication/express_workshop/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title>News</title>
+      <link>/news/</link>
+      <pubDate>Fri, 01 Dec 2017 00:00:00 -0500</pubDate>
+      <guid>/news/</guid>
+      <description>
+
+
+
+
+
+
+
+
+&lt;p&gt;&lt;strong&gt;[09/25/20]&lt;/strong&gt; Our paper on &lt;a href=&#34;https://arxiv.org/abs/1912.10065&#34;&gt;Deep Attribution Priors&lt;/a&gt; accepted at NeurIPS 2020.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;[09/24/20]&lt;/strong&gt; Our preprint on &lt;a href=&#34;https://www.medrxiv.org/content/10.1101/2020.09.13.20193565v1&#34;&gt;Shortcut learning by COVID radiograph classifiers&lt;/a&gt; featured in &lt;a href=&#34;https://www.theimagingwire.com/2020/09/24/covid-shortcuts-ai-stewards-superficial-us/&#34;&gt;The Imaging Wire&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;[11/21/19]&lt;/strong&gt; Cost-aware Artificial Intelligence (CoAI) project wins Madrona Prize (&lt;a href=&#34;https://www.geekwire.com/2019/technology-research-showcase-univ-washington-provides-glimpse-future/&#34;&gt;GeekWire&lt;/a&gt;, &lt;a href=&#34;https://www.bloomberg.com/press-releases/2019-11-21/madrona-awards-2019-madrona-prize-to-uw-project-that-applies-artificial-intelligence-to-build-accurate-and-easy-to-use-models&#34;&gt;Bloomberg&lt;/a&gt;, &lt;a href=&#34;https://www.madrona.com/madronaprize2019/&#34;&gt;Madrona Venture Group&lt;/a&gt;)&lt;/p&gt;
+
+</description>
     </item>
     
     <item>
