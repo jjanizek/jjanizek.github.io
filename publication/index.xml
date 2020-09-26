@@ -5,12 +5,36 @@
     <link>/publication/</link>
       <atom:link href="/publication/index.xml" rel="self" type="application/rss+xml" />
     <description>Publications</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 05 Sep 2020 14:40:02 -0400</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 25 Sep 2020 14:40:31 -0400</lastBuildDate>
     <image>
       <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
       <title>Publications</title>
       <link>/publication/</link>
     </image>
+    
+    <item>
+      <title>Learning Deep Attribution Priors Based On Prior Knowledge</title>
+      <link>/publication/dapr/</link>
+      <pubDate>Fri, 25 Sep 2020 14:40:31 -0400</pubDate>
+      <guid>/publication/dapr/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>AI for radiographic COVID-19 detection selects shortcuts over signal</title>
+      <link>/publication/cxr_covid/</link>
+      <pubDate>Tue, 22 Sep 2020 19:12:24 -0400</pubDate>
+      <guid>/publication/cxr_covid/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>AI for radiographic COVID-19 detection selects shortcuts over signal</title>
+      <link>/publication/</link>
+      <pubDate>Tue, 22 Sep 2020 19:12:24 -0400</pubDate>
+      <guid>/publication/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Adversarial Deconfounding Autoencoder for Learning Robust Gene Expression Embeddings</title>
@@ -41,14 +65,6 @@
       <link>/publication/cxr_adv/</link>
       <pubDate>Thu, 02 Apr 2020 14:39:32 -0400</pubDate>
       <guid>/publication/cxr_adv/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Learning Deep Attribution Priors Based On Prior Knowledge</title>
-      <link>/publication/dapr/</link>
-      <pubDate>Sun, 01 Dec 2019 14:40:31 -0400</pubDate>
-      <guid>/publication/dapr/</guid>
       <description></description>
     </item>
     
