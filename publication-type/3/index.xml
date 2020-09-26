@@ -5,12 +5,28 @@
     <link>/publication-type/3/</link>
       <atom:link href="/publication-type/3/index.xml" rel="self" type="application/rss+xml" />
     <description>3</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 17 Jul 2020 14:38:47 -0400</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 22 Sep 2020 19:12:24 -0400</lastBuildDate>
     <image>
       <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
       <title>3</title>
       <link>/publication-type/3/</link>
     </image>
+    
+    <item>
+      <title>AI for radiographic COVID-19 detection selects shortcuts over signal</title>
+      <link>/publication/cxr_covid/</link>
+      <pubDate>Tue, 22 Sep 2020 19:12:24 -0400</pubDate>
+      <guid>/publication/cxr_covid/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>AI for radiographic COVID-19 detection selects shortcuts over signal</title>
+      <link>/publication/</link>
+      <pubDate>Tue, 22 Sep 2020 19:12:24 -0400</pubDate>
+      <guid>/publication/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>True to the model, or true to the data?</title>
@@ -25,14 +41,6 @@
       <link>/publication/integrated_hessians/</link>
       <pubDate>Tue, 30 Jun 2020 14:39:47 -0400</pubDate>
       <guid>/publication/integrated_hessians/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Learning Deep Attribution Priors Based On Prior Knowledge</title>
-      <link>/publication/dapr/</link>
-      <pubDate>Sun, 01 Dec 2019 14:40:31 -0400</pubDate>
-      <guid>/publication/dapr/</guid>
       <description></description>
     </item>
     
