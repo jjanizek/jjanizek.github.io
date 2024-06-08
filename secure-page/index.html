@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Protected Page</title>
+</head>
+<body>
+    <h1>Enter Password</h1>
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="authenticate()">Submit</button>
+
+    <div id="content" style="display: none;">
+        <h2>Select a JSON file</h2>
+        <select id="jsonFiles">
+            <!-- Options will be added dynamically -->
+        </select>
+        <button onclick="loadJSON()">Load JSON</button>
+
+        <div id="data" style="display: none;">
+            <h2>Data from JSON</h2>
+            <div id="questionData"></div>
+            <button onclick="nextSet()">Next</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="config.js"></script> <!-- Add this line to include the injected config -->
+</body>
+</html>
