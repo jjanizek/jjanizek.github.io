@@ -28,6 +28,10 @@ jobs:
         if grep -q "window.REPO_NAME = '';" secure-page/config.js; then echo "REPO_NAME is missing"; exit 1; fi
         if grep -q "window.DIRECTORY_PATH = '';" secure-page/config.js; then echo "DIRECTORY_PATH is missing"; exit 1; fi
 
+    - name: List Directory Structure
+      run: |
+        ls -R
+
     - name: Deploy to GitHub Pages
       run: |
         git config --global user.name 'github-actions[bot]'
