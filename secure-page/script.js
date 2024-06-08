@@ -1,10 +1,10 @@
 let currentIndex = 0;
 let reportData = null;
 
-const VIZ_TOKEN = process.env.VIZ_TOKEN;
-const PASSWORD = process.env.PASSWORD;
-const REPO_NAME = process.env.REPO_NAME;
-const DIRECTORY_PATH = process.env.DIRECTORY_PATH;
+const VIZ_TOKEN = window.VIZ_TOKEN;
+const PASSWORD = window.PASSWORD;
+const REPO_NAME = window.REPO_NAME;
+const DIRECTORY_PATH = window.DIRECTORY_PATH;
 
 async function authenticate() {
     const enteredPassword = document.getElementById('password').value;
