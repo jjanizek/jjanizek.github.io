@@ -37,7 +37,7 @@ jobs:
         github_token: ${{ secrets.VIZ_TOKEN }}
         publish_dir: _site
         env:
-          GITHUB_TOKEN: ${{ secrets.VIZ_TOKEN }}
+          VIZ_TOKEN: ${{ secrets.VIZ_TOKEN }}
           PASSWORD: ${{ secrets.PASSWORD }}
           REPO_NAME: ${{ secrets.REPO_NAME }}
           DIRECTORY_PATH: lab-bench-reports-precision
