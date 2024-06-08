@@ -21,6 +21,14 @@ jobs:
         echo "window.REPO_NAME = '${{ secrets.REPO_NAME }}';" >> secure-page/config.js
         echo "window.DIRECTORY_PATH = '${{ secrets.DIRECTORY_PATH }}';" >> secure-page/config.js
 
+    - name: Verify Config JS
+      run: |
+        if grep -q "window.VIZ_TOKEN = '';" secure-page/config.js; then echo "VIZ_TOKEN is missing"; exit 1; fi
+        if grep -q "window.PASSWORD = '';" secure-page/config.js; then echo "PASSWORD is missing"; exit 1; fi
+        if grep -q "window.REPO_NAME = '';" secure-page/config.js; then echo "REPO_NAME is missing"; exit 1; fi
+        if grep -q "window.DIRECTORY_PATH = '';" secure-page/config.js; then echo "DIRECTORY_PATH is missing"; exit 1; fi
+
+
     - name: Deploy to GitHub Pages
       run: |
         git config --global user.name 'github-actions[bot]'
