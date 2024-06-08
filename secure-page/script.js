@@ -1,9 +1,14 @@
 let currentIndex = 0;
 let reportData = null;
 
+const VIZ_TOKEN = process.env.VIZ_TOKEN;
+const PASSWORD = process.env.PASSWORD;
+const REPO_NAME = process.env.REPO_NAME;
+const DIRECTORY_PATH = process.env.DIRECTORY_PATH;
+
 async function authenticate() {
     const enteredPassword = document.getElementById('password').value;
-    if (enteredPassword !== window.PASSWORD) {
+    if (enteredPassword !== PASSWORD) {
         alert('Incorrect password!');
         return;
     }
@@ -15,14 +20,16 @@ async function populateDropdown() {
     const dropdown = document.getElementById('jsonFiles');
     dropdown.innerHTML = ''; // Clear any existing options
 
-    const url = `https://api.github.com/repos/${window.REPO_NAME}/contents/${window.DIRECTORY_PATH}`;
+    const url = `https://api.github.com/repos/${REPO_NAME}/contents/${DIRECTORY_PATH}`;
+    console.log('Requesting URL:', url);
 
-    const response = await fetch(url, {
-        headers: {
-            'Authorization': `token ${window.VIZ_TOKEN}`,
-            'Accept': 'application/vnd.github.v3.raw'
-        }
-    });
+    const headers = {
+        'Authorization': `token ${VIZ_TOKEN}`,
+        'Accept': 'application/vnd.github.v3.raw'
+    };
+    console.log('Request headers:', headers);
+
+    const response = await fetch(url, { headers });
 
     if (!response.ok) {
         console.error('Failed to fetch directory contents from GitHub:', response.status, response.statusText);
@@ -43,14 +50,16 @@ async function populateDropdown() {
 
 async function loadJSON() {
     const selectedFilePath = document.getElementById('jsonFiles').value;
-    const url = `https://api.github.com/repos/${window.REPO_NAME}/contents/${selectedFilePath}`;
+    const url = `https://api.github.com/repos/${REPO_NAME}/contents/${selectedFilePath}`;
+    console.log('Loading JSON from URL:', url);
 
-    const response = await fetch(url, {
-        headers: {
-            'Authorization': `token ${window.VIZ_TOKEN}`,
-            'Accept': 'application/vnd.github.v3.raw'
-        }
-    });
+    const headers = {
+        'Authorization': `token ${VIZ_TOKEN}`,
+        'Accept': 'application/vnd.github.v3.raw'
+    };
+    console.log('Request headers:', headers);
+
+    const response = await fetch(url, { headers });
 
     if (!response.ok) {
         console.error('Failed to fetch data from GitHub:', response.status, response.statusText);
@@ -58,7 +67,7 @@ async function loadJSON() {
         return;
     }
 
-    reportData = await response.json();
+    reportData = JSON.parse(atob((await response.json()).content));
     currentIndex = 0;
     document.getElementById('data').style.display = 'block';
     displaySet();
