@@ -1,0 +1,30 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Change to your default branch if necessary
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Inject GitHub Token and Password
+      run: |
+        mkdir -p secure-page
+        echo "window.VIZ_TOKEN = '${{ secrets.VIZ_TOKEN }}';" > secure-page/config.js
+        echo "window.PASSWORD = '${{ secrets.PASSWORD }}';" >> secure-page/config.js
+        echo "window.REPO_NAME = '${{ secrets.REPO_NAME }}';" >> secure-page/config.js
+        echo "window.DIRECTORY_PATH = '${{ secrets.DIRECTORY_PATH }}';" >> secure-page/config.js
+
+    - name: Deploy to GitHub Pages
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add secure-page/config.js
+        git commit -m "Add secure-page/config.js"
+        git push origin main
