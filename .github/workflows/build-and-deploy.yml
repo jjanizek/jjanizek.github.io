@@ -1,0 +1,51 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Change to your default branch if necessary
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.0  # Specify the Ruby version
+
+    - name: Install dependencies
+      run: |
+        gem install bundler
+        bundle install
+
+    - name: Build with Jekyll
+      run: bundle exec jekyll build
+
+    - name: Inject GitHub Token and Password
+      run: |
+        mkdir -p _site/secure-page
+        echo "window.VIZ_TOKEN = '${{ secrets.VIZ_TOKEN }}';" > _site/secure-page/config.js
+        echo "window.PASSWORD = '${{ secrets.PASSWORD }}';" >> _site/secure-page/config.js
+        echo "window.REPO_NAME = '${{ secrets.REPO_NAME }}';" >> _site/secure-page/config.js
+        echo "window.DIRECTORY_PATH = 'lab-bench-reports-precision';" >> _site/secure-page/config.js
+
+    - name: Verify Config JS
+      run: |
+        if grep -q "window.VIZ_TOKEN = '';" _site/secure-page/config.js; then echo "VIZ_TOKEN is missing"; exit 1; fi
+        if grep -q "window.PASSWORD = '';" _site/secure-page/config.js; then echo "PASSWORD is missing"; exit 1; fi
+        if grep -q "window.REPO_NAME = '';" _site/secure-page/config.js; then echo "REPO_NAME is missing"; exit 1; fi
+        if grep -q "window.DIRECTORY_PATH = '';" _site/secure-page/config.js; then echo "DIRECTORY_PATH is missing"; exit 1; fi
+
+    - name: List Directory Structure
+      run: ls -R _site
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.VIZ_TOKEN }}
+        publish_dir: _site
