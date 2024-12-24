@@ -17,6 +17,7 @@
             --font-weight-normal: 500;
             --font-weight-medium: 600;
             --font-weight-bold: 800;
+            --grid-color: rgba(0, 0, 0, 0.05);
 
             font-family: var(--font-family);
             font-optical-sizing: auto;
@@ -32,6 +33,7 @@
                 --text-color-alt: #aaa;
                 --background-color: #000;
                 --background-color-alt: #111;
+                --grid-color: rgba(255, 255, 255, 0.05);
             }
         }
 
@@ -39,67 +41,60 @@
             box-sizing: border-box;
         }
 
-        * + * {
-            margin-top: var(--line-height);
-        }
-
         html {
-            display: flex;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            flex-direction: column;
-            align-items: center;
-            background: var(--background-color);
-            color: var(--text-color);
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 1ch var(--line-height);
+            background-position: 0 0;
+            background-color: var(--background-color);
         }
 
         body {
-            position: relative;
             width: 100%;
-            margin: 0;
-            padding: var(--line-height) 2ch;
-            max-width: calc(min(80ch, 100%));
+            max-width: 80ch;
+            margin: 0 auto;
+            padding: calc(var(--line-height) * 2) 2ch;
+            color: var(--text-color);
             line-height: var(--line-height);
-            overflow-x: hidden;
         }
 
         h1 {
-            font-size: 2rem;
-            line-height: calc(2 * var(--line-height));
-            margin-bottom: calc(var(--line-height) * 2);
-            text-transform: uppercase;
+            font-size: 2.5rem;
+            line-height: 1.2;
+            margin: 0 0 calc(var(--line-height) * 2);
             font-weight: var(--font-weight-bold);
-        }
-
-        p {
-            margin-bottom: var(--line-height);
-            word-break: break-word;
-            word-wrap: break-word;
-            hyphens: auto;
+            text-transform: uppercase;
         }
 
         .bio {
-            max-width: 60ch;
-            margin: 0 auto calc(var(--line-height) * 2);
+            max-width: 65ch;
+            margin: 0 0 calc(var(--line-height) * 3);
+            line-height: var(--line-height);
         }
 
         .links {
             display: flex;
-            gap: 1ch;
-            justify-content: center;
-            margin-bottom: calc(var(--line-height) * 2);
+            gap: 2ch;
+            margin-bottom: calc(var(--line-height) * 3);
         }
 
         .button {
+            display: inline-block;
             border: var(--border-thickness) solid var(--text-color);
-            padding: calc(var(--line-height) / 2 - var(--border-thickness)) 2ch;
-            background: var(--background-color);
-            color: var(--text-color);
+            padding: calc(var(--line-height) / 2) 2ch;
             text-decoration: none;
+            color: var(--text-color);
+            background: var(--background-color);
             text-transform: uppercase;
             font-weight: var(--font-weight-medium);
-            transition: background-color 0.2s;
+            min-width: 15ch;
+            text-align: center;
+        }
+
+        .button.large {
+            min-width: 20ch;
         }
 
         .button:hover {
@@ -108,41 +103,9 @@
 
         .profile-image {
             display: block;
-            width: 100%;
             max-width: 400px;
             height: auto;
-            margin: calc(var(--line-height) * 2) auto;
-            border: var(--border-thickness) solid var(--text-color);
-        }
-
-        .projects {
-            margin-top: calc(var(--line-height) * 3);
-        }
-
-        .projects h2 {
-            font-size: 1rem;
-            text-transform: uppercase;
-            font-weight: var(--font-weight-bold);
-            margin-bottom: calc(var(--line-height) * 2);
-        }
-
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2ch;
-            margin-top: calc(var(--line-height) * 2);
-        }
-
-        .project-card {
-            border: var(--border-thickness) solid var(--text-color);
-            padding: calc(var(--line-height)) 2ch;
-        }
-
-        .project-card h3 {
-            font-size: 1rem;
-            font-weight: var(--font-weight-medium);
-            margin-top: 0;
-            margin-bottom: var(--line-height);
+            margin: calc(var(--line-height) * 2) 0;
         }
 
         @media screen and (max-width: 480px) {
@@ -154,10 +117,10 @@
             }
             .links {
                 flex-direction: column;
-                align-items: stretch;
             }
             .button {
-                text-align: center;
+                width: 100%;
+                max-width: none;
             }
         }
     </style>
@@ -170,7 +133,7 @@
     </p>
 
     <div class="links">
-        <a href="https://scholar.google.com/citations?user=lqS_ONoAAAAJ&hl=en" class="button">
+        <a href="https://scholar.google.com/citations?user=lqS_ONoAAAAJ&hl=en" class="button large">
             Google Scholar
         </a>
         <a href="2023_cv-version.pdf" class="button">
@@ -179,23 +142,5 @@
     </div>
 
     <img src="IMG_5065.gif" alt="Profile" class="profile-image">
-
-    <section class="projects">
-        <h2>Featured Projects</h2>
-        <div class="project-grid">
-            <div class="project-card">
-                <h3>AI Interpretability</h3>
-                <p>Research on making AI systems more transparent and understandable, with applications in medical imaging and diagnostics.</p>
-            </div>
-            <div class="project-card">
-                <h3>Medical AI Systems</h3>
-                <p>Development of robust AI systems for radiology and dermatology applications, focusing on safety and reliability.</p>
-            </div>
-            <div class="project-card">
-                <h3>Biological Data Analysis</h3>
-                <p>Methods for analyzing complex biological data, including single-cell and bulk transcriptomics.</p>
-            </div>
-        </div>
-    </section>
 </body>
 </html>
