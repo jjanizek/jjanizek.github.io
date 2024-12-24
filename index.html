@@ -98,17 +98,30 @@
             display: flex;
             gap: 2ch;
             margin: calc(var(--line-height) * 2) 0;
+            align-items: flex-start; /* Ensures buttons align at the top */
         }
 
         .button {
             border: var(--border-thickness) solid var(--text-color);
-            padding: calc(var(--line-height) / 2) 2ch;
+            height: var(--line-height);
+            line-height: calc(var(--line-height) - var(--border-thickness) * 2);
+            padding: 0 2ch;
             text-decoration: none;
             color: var(--text-color);
             text-transform: uppercase;
             font-weight: var(--font-weight-medium);
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             background: var(--background-color);
+            white-space: nowrap;
+        }
+
+        .button:first-child {
+            width: 20ch; /* Google Scholar button width */
+        }
+
+        .button:last-child {
+            width: 8ch; /* CV button width */
         }
 
         .button:hover {
