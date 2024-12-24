@@ -94,11 +94,45 @@
             hyphens: auto;
         }
 
+        .projects {
+            margin-top: calc(var(--line-height) * 3);
+        }
+
+        .project-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 3ch;
+        }
+
+        .project-card {
+            position: relative;
+            padding: calc(var(--line-height)) 3ch;
+            border: var(--border-thickness) solid var(--text-color);
+        }
+
+        .project-card h3 {
+            font-size: 1rem;
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            margin: 0 0 var(--line-height);
+        }
+
+        .project-card p {
+            margin: 0 0 var(--line-height);
+            line-height: var(--line-height);
+        }
+
+        .project-card .highlight {
+            color: var(--text-color-alt);
+            border-left: var(--border-thickness) solid var(--text-color);
+            padding-left: 2ch;
+            margin: var(--line-height) 0;
+        }
+
         .links {
             display: flex;
             gap: 2ch;
-            margin: calc(var(--line-height) * 2) 0;
-            align-items: flex-start; /* Ensures buttons align at the top */
+            margin-top: var(--line-height);
         }
 
         .button {
@@ -169,5 +203,36 @@
     </div>
 
     <img src="IMG_5065.gif" alt="Profile" class="profile-image">
+
+    <section class="projects">
+        <h2>Featured Projects</h2>
+        <div class="project-grid">
+            <div class="project-card">
+                <h3>LAB-Bench</h3>
+                <p>An evaluation dataset for AI systems intended to benchmark capabilities foundational to scientific research in biology.</p>
+                
+                <div class="highlight">
+                    Featured in US and UK AISI Joint Pre-Deployment Testing of Anthropic's Claude 3.5 Sonnet and included in the OpenAI o1 System Card.
+                </div>
+                
+                <p>Comprehensive benchmark designed to assess AI models' understanding of core biological concepts, methodology, and scientific reasoning.</p>
+            </div>
+
+            <div class="project-card">
+                <h3>LLM RAG Oncology Program</h3>
+                <p>A system leveraging large language models and retrieval-augmented generation to provide guideline-grounded clinical management recommendations in oncology.</p>
+                
+                <div class="highlight">
+                    Demonstrates strong performance across multiple model sizes (8B-32B parameters) with significant improvements through guideline-based retrieval augmentation.
+                </div>
+                
+                <p>Features hybrid semantic and keyword-based retrieval from NCCN guidelines, achieving high accuracy on complex clinical decision-making tasks.</p>
+                
+                <a href="https://github.com/jjanizek/blog_posts/blob/main/AutomatingOncology.md" class="button">
+                    View Project
+                </a>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
