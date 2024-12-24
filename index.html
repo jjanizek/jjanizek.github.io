@@ -17,7 +17,6 @@
             --font-weight-normal: 500;
             --font-weight-medium: 600;
             --font-weight-bold: 800;
-            --grid-color: rgba(0, 0, 0, 0.05);
 
             font-family: var(--font-family);
             font-optical-sizing: auto;
@@ -33,7 +32,6 @@
                 --text-color-alt: #aaa;
                 --background-color: #000;
                 --background-color-alt: #111;
-                --grid-color: rgba(255, 255, 255, 0.05);
             }
         }
 
@@ -41,60 +39,76 @@
             box-sizing: border-box;
         }
 
-        html {
-            min-height: 100vh;
-            background-image: 
-                linear-gradient(var(--grid-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+        * + * {
+            margin-top: var(--line-height);
+        }
+
+        .debug .debug-grid {
+            --color: color-mix(in srgb, var(--text-color) 10%, var(--background-color) 90%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            background-image:
+                repeating-linear-gradient(var(--color) 0 1px, transparent 1px 100%),
+                repeating-linear-gradient(90deg, var(--color) 0 1px, transparent 1px 100%);
             background-size: 1ch var(--line-height);
-            background-position: 0 0;
-            background-color: var(--background-color);
+            margin: 0;
+        }
+
+        html {
+            display: flex;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            flex-direction: column;
+            align-items: center;
+            background: var(--background-color);
+            color: var(--text-color);
         }
 
         body {
+            position: relative;
             width: 100%;
-            max-width: 80ch;
-            margin: 0 auto;
-            padding: calc(var(--line-height) * 2) 2ch;
-            color: var(--text-color);
+            margin: 0;
+            padding: var(--line-height) 2ch;
+            max-width: calc(min(80ch, round(down, 100%, 1ch)));
             line-height: var(--line-height);
+            overflow-x: hidden;
         }
 
         h1 {
-            font-size: 2.5rem;
-            line-height: 1.2;
-            margin: 0 0 calc(var(--line-height) * 2);
-            font-weight: var(--font-weight-bold);
+            font-size: 2rem;
+            line-height: calc(2 * var(--line-height));
+            margin: calc(var(--line-height) * 2) 0;
             text-transform: uppercase;
+            font-weight: var(--font-weight-bold);
         }
 
-        .bio {
-            max-width: 65ch;
-            margin: 0 0 calc(var(--line-height) * 3);
-            line-height: var(--line-height);
+        p {
+            margin-bottom: var(--line-height);
+            word-break: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
         }
 
         .links {
             display: flex;
             gap: 2ch;
-            margin-bottom: calc(var(--line-height) * 3);
+            margin: calc(var(--line-height) * 2) 0;
         }
 
         .button {
-            display: inline-block;
             border: var(--border-thickness) solid var(--text-color);
             padding: calc(var(--line-height) / 2) 2ch;
             text-decoration: none;
             color: var(--text-color);
-            background: var(--background-color);
             text-transform: uppercase;
             font-weight: var(--font-weight-medium);
-            min-width: 15ch;
-            text-align: center;
-        }
-
-        .button.large {
-            min-width: 20ch;
+            display: inline-block;
+            background: var(--background-color);
         }
 
         .button:hover {
@@ -108,6 +122,11 @@
             margin: calc(var(--line-height) * 2) 0;
         }
 
+        .debug-toggle-label {
+            text-align: right;
+            margin-bottom: var(--line-height);
+        }
+
         @media screen and (max-width: 480px) {
             :root {
                 font-size: 14px;
@@ -115,25 +134,20 @@
             body {
                 padding: var(--line-height) 1ch;
             }
-            .links {
-                flex-direction: column;
-            }
-            .button {
-                width: 100%;
-                max-width: none;
-            }
         }
     </style>
 </head>
-<body>
+<body class="debug">
+    <div class="debug-grid"></div>
+    
     <h1>Joseph Janizek</h1>
     
-    <p class="bio">
+    <p>
         Physician scientist (MD/PhD) working on building safe and reliable AI systems for medicine and biotech. During my PhD (Computer Science and Engineering @ UW), I developed methods for AI interpretability and robustness, with applications in computer vision (radiology, dermatology), natural language processing, and biology (bulk/single-cell transcriptomics). Outside of research, I also do consulting work on projects at the intersection of AI/medicine/biology. My clinical interests are in neuroradiology. I'm currently a PGY-1 in internal medicine @ VMFH, and am an incoming Stanford radiology resident for 2025.
     </p>
 
     <div class="links">
-        <a href="https://scholar.google.com/citations?user=lqS_ONoAAAAJ&hl=en" class="button large">
+        <a href="https://scholar.google.com/citations?user=lqS_ONoAAAAJ&hl=en" class="button">
             Google Scholar
         </a>
         <a href="2023_cv-version.pdf" class="button">
